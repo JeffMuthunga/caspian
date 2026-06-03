@@ -30,11 +30,13 @@ class BatchTest extends TestCase
         ['manufacturer' => $mfg, 'product' => $product] = $this->product();
 
         $this->postJson('/api/batches', [
-            'product_id'      => $product->id,
-            'manufacturer_id' => $mfg->id,
-            'batch_number'    => 'LOT-4421',
-            'manufacture_date'=> '2025-01-01',
-            'expiry_date'     => '2027-01-01',
+            'product_id'       => $product->id,
+            'manufacturer_id'  => $mfg->id,
+            'batch_number'     => 'LOT-4421',
+            'manufacture_date' => '2025-01-01',
+            'expiry_date'      => '2027-01-01',
+            'quantity_produced'=> 5000,
+            'internal_lot_code'=> 'INT-001',
         ])->assertStatus(201)
           ->assertJsonPath('batch_number', 'LOT-4421')
           ->assertJsonMissingPath('quantity_produced')
