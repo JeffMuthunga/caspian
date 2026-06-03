@@ -1,0 +1,102 @@
+services:
+  rwanda-fda-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: rwanda_fda
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5433:5432"
+    volumes:
+      - rwanda_fda_data:/var/lib/postgresql/data
+      - ./db/rwanda_fda_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+  nafdac-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: nafdac
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5434:5432"
+    volumes:
+      - nafdac_data:/var/lib/postgresql/data
+      - ./db/nafdac_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+  ontology-db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ontology
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5435:5432"
+    volumes:
+      - ontology_data:/var/lib/postgresql/data
+      - ./db/ontology_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+  rwanda-fda-backend:
+    build: ./rwanda-fda/backend
+    ports:
+      - "8001:8000"
+    environment:
+      APP_KEY: base64:PLACEHOLDER
+      DB_CONNECTION: pgsql
+      DB_HOST: rwanda-fda-db
+      DB_PORT: 5432
+      DB_DATABASE: rwanda_fda
+      DB_USERNAME: postgres
+      DB_PASSWORD: secret
+      ONTOLOGY_SERVICE_URL: http://ai-ontology-service:8000
+      NMRA_ID: RWANDA_FDA
+    depends_on:
+      rwanda-fda-db:
+        condition: service_healthy
+
+  nafdac-backend:
+    build: ./nafdac/backend
+    ports:
+      - "8002:8000"
+    environment:
+      APP_KEY: base64:PLACEHOLDER
+      DB_CONNECTION: pgsql
+      DB_HOST: nafdac-db
+      DB_PORT: 5432
+      DB_DATABASE: nafdac
+      DB_USERNAME: postgres
+      DB_PASSWORD: secret
+      ONTOLOGY_SERVICE_URL: http://ai-ontology-service:8000
+      NMRA_ID: NAFDAC
+    depends_on:
+      nafdac-db:
+        condition: service_healthy
+
+  ai-ontology-service:
+    build: ./ai-ontology-service
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:secret@ontology-db:5432/ontology
+      OLLAMA_HOST: http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      ontology-db:
+        condition: service_healthy
+
+volumes:
+  rwanda_fda_data:
+  nafdac_data:
+  ontology_data:
