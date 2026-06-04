@@ -6,6 +6,7 @@ use App\Models\Batch;
 use App\Models\Manufacturer;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class ProductRecallTest extends TestCase
@@ -33,6 +34,12 @@ class ProductRecallTest extends TestCase
 
     public function test_can_create_product_recall(): void
     {
+        Http::fake([
+            '*/ontology/publish' => Http::response(['id' => 'some-uuid', 'object_type' => 'Manufacturer'], 200),
+            '*/ontology/link'    => Http::response(['id' => 'link-uuid'], 200),
+            '*/ai/ingest'        => Http::response(['status' => 'ok'], 200),
+        ]);
+
         ['mfg' => $mfg, 'batch' => $batch] = $this->seedBatchAndManufacturer();
 
         $this->postJson('/api/product-recalls', [
@@ -56,6 +63,12 @@ class ProductRecallTest extends TestCase
 
     public function test_only_active_recalls_returned_when_status_filter_applied(): void
     {
+        Http::fake([
+            '*/ontology/publish' => Http::response(['id' => 'some-uuid', 'object_type' => 'Manufacturer'], 200),
+            '*/ontology/link'    => Http::response(['id' => 'link-uuid'], 200),
+            '*/ai/ingest'        => Http::response(['status' => 'ok'], 200),
+        ]);
+
         ['mfg' => $mfg, 'batch' => $batch] = $this->seedBatchAndManufacturer();
 
         $this->postJson('/api/product-recalls', [

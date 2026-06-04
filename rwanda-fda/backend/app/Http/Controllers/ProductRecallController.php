@@ -33,7 +33,12 @@ class ProductRecallController extends Controller
             'inspector_id'                 => 'sometimes|integer',
         ]);
 
-        return response()->json(ProductRecall::create($data), 201);
+        $recall = ProductRecall::create($data);
+        $recall->load(['batch.product', 'manufacturer']);
+
+        (new \App\Services\OntologyPublisher())->publishRecallGraph($recall);
+
+        return response()->json($recall, 201);
     }
 
     public function show(ProductRecall $productRecall): JsonResponse
