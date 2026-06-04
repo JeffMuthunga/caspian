@@ -30,7 +30,7 @@ async def query(req: QueryRequest):
         return {"answer": "No relevant regulatory data found.", "sources": []}
 
     context = "\n\n".join(
-        f"[{c['metadata'].get('object_type', 'Object')} {c['object_id']}]\n{c['chunk_text']}"
+        f"[{c['metadata'].get('object_type', 'Object')} {c['metadata'].get('source_nmra', '')}:{c['object_id']}]\n{c['chunk_text']}"
         for c in chunks
     )
     prompt = f"Context:\n{context}\n\nQuestion: {req.question}\n\nAnswer (cite every claim):"
