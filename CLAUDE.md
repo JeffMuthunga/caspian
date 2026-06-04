@@ -160,9 +160,14 @@ GET   /health                 Service health check
 
 - [x] **Phase 1 — Foundation**: GitHub monorepo · docker-compose · 3 DB schemas · Ollama running
 - [ ] **Phase 2 — AI Service**: FastAPI skeleton · embed function · pgvector store · ingest script
-- [ ] **Phase 3 — Rwanda FDA Backend**: Laravel manufacturers + products + batches + product_recalls · publish + query integration
+- [x] **Phase 3 — Rwanda FDA Backend**: Laravel manufacturers + products + batches + product_recalls · OntologyPublisher wired · all tests passing (Laravel 13 / PHP 8.4)
 - [ ] **Phase 4 — Rwanda FDA Frontend**: Next.js recall list · batch view · AI chat interface · citations
-- [ ] **Phase 5 — Mirror + Link**: Repeat for NAFDAC (different column names) · cross-org links · PMS demo scenario
+- [~] **Phase 5 — NAFDAC Backend**: Scaffold complete · domain models in progress (different column names: company_name, lot_number, severity_grade, etc.)
+
+### Test commands
+- Rwanda FDA: `cd rwanda-fda/backend && /opt/homebrew/opt/php/bin/php vendor/bin/phpunit --no-coverage`
+- NAFDAC: `/opt/homebrew/opt/php/bin/php /Users/wainaina/Development/Caspian/nafdac/backend/vendor/bin/phpunit --configuration /Users/wainaina/Development/Caspian/nafdac/backend/phpunit.xml --no-coverage`
+- Python AI service: `cd ai-ontology-service && pytest tests/ -v`
 
 ---
 
