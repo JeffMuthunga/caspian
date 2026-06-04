@@ -83,6 +83,15 @@ services:
       nafdac-db:
         condition: service_healthy
 
+  rwanda-fda-frontend:
+    build: ./rwanda-fda/frontend
+    ports:
+      - "3000:3000"
+    environment:
+      BACKEND_URL: http://rwanda-fda-backend:8000
+    depends_on:
+      - rwanda-fda-backend
+
   ai-ontology-service:
     build: ./ai-ontology-service
     ports:
