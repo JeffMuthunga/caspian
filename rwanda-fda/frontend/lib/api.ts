@@ -50,7 +50,10 @@ export interface AiQueryResponse {
   sources: { object_id: string; chunk_text: string }[]
 }
 
-const BASE = '/api'
+const BASE =
+  typeof window === 'undefined'
+    ? `${process.env.BACKEND_URL || 'http://localhost:8001'}/api`
+    : '/api'
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`, { cache: 'no-store' })
