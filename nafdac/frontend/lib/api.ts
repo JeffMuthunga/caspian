@@ -1,28 +1,28 @@
 // lib/api.ts
 export interface Manufacturer {
   id: number
-  name: string
-  country: string
-  registration_number: string
-  license_status: 'active' | 'suspended' | 'revoked'
+  company_name: string
+  origin_country: string
+  reg_no: string
+  authorization_status: string
 }
 
 export interface Product {
   id: number
-  manufacturer_id: number
-  name: string
-  generic_name: string
-  dosage_form: string
-  strength: string
-  registration_number: string
+  supplier_id: number
+  product_name: string
+  inn_name: string
+  formulation: string
+  potency: string
+  market_auth_number: string
 }
 
 export interface Batch {
   id: number
   product_id: number
-  manufacturer_id: number
-  batch_number: string
-  manufacture_date: string
+  supplier_id: number
+  lot_number: string
+  production_date: string
   expiry_date: string
   product?: Product
   manufacturer?: Manufacturer
@@ -30,15 +30,15 @@ export interface Batch {
 
 export interface ProductRecall {
   id: number
-  batch_id: number
-  manufacturer_id: number
-  recall_number: string
-  reason: string
-  classification: 'Class I' | 'Class II' | 'Class III'
-  qc_summary: string
-  status: 'active' | 'completed' | 'closed'
-  date_issued: string
-  scope?: string
+  lot_id: number
+  supplier_id: number
+  alert_reference: string
+  recall_reason: string
+  severity_grade: 'Grade I' | 'Grade II' | 'Grade III'
+  laboratory_findings: string
+  recall_status: 'active' | 'completed' | 'closed'
+  issue_date: string
+  affected_regions?: string
   batch?: Batch
   manufacturer?: Manufacturer
   created_at: string
@@ -52,7 +52,7 @@ export interface AiQueryResponse {
 
 const BASE =
   typeof window === 'undefined'
-    ? `${process.env.BACKEND_URL || 'http://localhost:8001'}/api`
+    ? `${process.env.BACKEND_URL || 'http://localhost:8002'}/api`
     : '/api'
 
 async function get<T>(path: string): Promise<T> {

@@ -20,9 +20,9 @@ export default function NewRecallPage() {
   const [errors, setErrors] = useState<Record<string, string[]>>({})
 
   const [form, setForm] = useState({
-    batch_id: '', manufacturer_id: '', recall_number: '',
-    classification: '', reason: '', qc_summary: '',
-    date_issued: '', scope: '', status: 'active',
+    lot_id: '', supplier_id: '', alert_reference: '',
+    severity_grade: '', recall_reason: '', laboratory_findings: '',
+    issue_date: '', affected_regions: '', recall_status: 'active',
   })
 
   useEffect(() => {
@@ -41,8 +41,8 @@ export default function NewRecallPage() {
     try {
       const recall = await api.recalls.create({
         ...form,
-        batch_id: Number(form.batch_id),
-        manufacturer_id: Number(form.manufacturer_id),
+        lot_id: Number(form.lot_id),
+        supplier_id: Number(form.supplier_id),
       })
       router.push(`/recalls/${recall.id}`)
     } catch (err: unknown) {
@@ -68,76 +68,76 @@ export default function NewRecallPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
 
             <div className="space-y-1">
-              <Label>Batch</Label>
-              <Select onValueChange={(v: unknown) => field('batch_id', v as string | null)}>
-                <SelectTrigger><SelectValue placeholder="Select batch" /></SelectTrigger>
+              <Label>Batch (Lot)</Label>
+              <Select onValueChange={(v: unknown) => field('lot_id', v as string | null)}>
+                <SelectTrigger><SelectValue placeholder="Select lot" /></SelectTrigger>
                 <SelectContent>
                   {batches.map(b => (
-                    <SelectItem key={b.id} value={String(b.id)}>{b.batch_number}</SelectItem>
+                    <SelectItem key={b.id} value={String(b.id)}>{b.lot_number}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <FieldError name="batch_id" />
+              <FieldError name="lot_id" />
             </div>
 
             <div className="space-y-1">
-              <Label>Manufacturer</Label>
-              <Select onValueChange={(v: unknown) => field('manufacturer_id', v as string | null)}>
-                <SelectTrigger><SelectValue placeholder="Select manufacturer" /></SelectTrigger>
+              <Label>Supplier / Manufacturer</Label>
+              <Select onValueChange={(v: unknown) => field('supplier_id', v as string | null)}>
+                <SelectTrigger><SelectValue placeholder="Select supplier" /></SelectTrigger>
                 <SelectContent>
                   {manufacturers.map(m => (
-                    <SelectItem key={m.id} value={String(m.id)}>{m.name}</SelectItem>
+                    <SelectItem key={m.id} value={String(m.id)}>{m.company_name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <FieldError name="manufacturer_id" />
+              <FieldError name="supplier_id" />
             </div>
 
             <div className="space-y-1">
-              <Label>Recall Number</Label>
-              <Input value={form.recall_number} onChange={e => field('recall_number', e.target.value)} placeholder="RCL-001" />
-              <FieldError name="recall_number" />
+              <Label>Alert Reference</Label>
+              <Input value={form.alert_reference} onChange={e => field('alert_reference', e.target.value)} placeholder="ALT-001" />
+              <FieldError name="alert_reference" />
             </div>
 
             <div className="space-y-1">
-              <Label>Classification</Label>
-              <Select onValueChange={(v: unknown) => field('classification', v as string | null)}>
-                <SelectTrigger><SelectValue placeholder="Select classification" /></SelectTrigger>
+              <Label>Severity Grade</Label>
+              <Select onValueChange={(v: unknown) => field('severity_grade', v as string | null)}>
+                <SelectTrigger><SelectValue placeholder="Select severity grade" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Class I">Class I</SelectItem>
-                  <SelectItem value="Class II">Class II</SelectItem>
-                  <SelectItem value="Class III">Class III</SelectItem>
+                  <SelectItem value="Grade I">Grade I</SelectItem>
+                  <SelectItem value="Grade II">Grade II</SelectItem>
+                  <SelectItem value="Grade III">Grade III</SelectItem>
                 </SelectContent>
               </Select>
-              <FieldError name="classification" />
+              <FieldError name="severity_grade" />
             </div>
 
             <div className="space-y-1">
-              <Label>Reason</Label>
-              <Textarea value={form.reason} onChange={e => field('reason', e.target.value)} placeholder="Reason for recall..." />
-              <FieldError name="reason" />
+              <Label>Recall Reason</Label>
+              <Textarea value={form.recall_reason} onChange={e => field('recall_reason', e.target.value)} placeholder="Reason for recall..." />
+              <FieldError name="recall_reason" />
             </div>
 
             <div className="space-y-1">
-              <Label>QC Summary</Label>
-              <Textarea value={form.qc_summary} onChange={e => field('qc_summary', e.target.value)} placeholder="Laboratory findings..." />
-              <FieldError name="qc_summary" />
+              <Label>Laboratory Findings</Label>
+              <Textarea value={form.laboratory_findings} onChange={e => field('laboratory_findings', e.target.value)} placeholder="Laboratory findings..." />
+              <FieldError name="laboratory_findings" />
             </div>
 
             <div className="space-y-1">
-              <Label>Date Issued</Label>
-              <Input type="date" value={form.date_issued} onChange={e => field('date_issued', e.target.value)} />
-              <FieldError name="date_issued" />
+              <Label>Issue Date</Label>
+              <Input type="date" value={form.issue_date} onChange={e => field('issue_date', e.target.value)} />
+              <FieldError name="issue_date" />
             </div>
 
             <div className="space-y-1">
-              <Label>Scope (optional)</Label>
-              <Input value={form.scope} onChange={e => field('scope', e.target.value)} placeholder="National / Regional..." />
+              <Label>Affected Regions (optional)</Label>
+              <Input value={form.affected_regions} onChange={e => field('affected_regions', e.target.value)} placeholder="National / Regional..." />
             </div>
 
             <div className="space-y-1">
               <Label>Status</Label>
-              <Select defaultValue="active" onValueChange={(v: unknown) => field('status', v as string | null)}>
+              <Select defaultValue="active" onValueChange={(v: unknown) => field('recall_status', v as string | null)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="active">Active</SelectItem>

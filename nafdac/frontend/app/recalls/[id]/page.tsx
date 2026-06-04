@@ -28,8 +28,8 @@ export default async function RecallDetailPage({ params }: { params: Promise<{ i
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{recall.recall_number}</h1>
-          <div className="mt-1"><StatusBadge status={recall.status} /></div>
+          <h1 className="text-2xl font-semibold text-gray-900">{recall.alert_reference}</h1>
+          <div className="mt-1"><StatusBadge status={recall.recall_status} /></div>
         </div>
         <Link href="/recalls" className={buttonVariants({ variant: 'outline' })}>
           ← Back to Recalls
@@ -39,25 +39,25 @@ export default async function RecallDetailPage({ params }: { params: Promise<{ i
         <Card>
           <CardHeader><CardTitle>Recall Information</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            <Row label="Recall Number" value={recall.recall_number} />
-            <Row label="Classification" value={recall.classification} />
-            <Row label="Date Issued" value={recall.date_issued} />
-            <Row label="Scope" value={recall.scope ?? '—'} />
-            <Row label="Reason" value={recall.reason} />
-            <Row label="QC Summary" value={recall.qc_summary} />
+            <Row label="Alert Reference" value={recall.alert_reference} />
+            <Row label="Severity Grade" value={recall.severity_grade} />
+            <Row label="Issue Date" value={recall.issue_date} />
+            <Row label="Affected Regions" value={recall.affected_regions ?? '—'} />
+            <Row label="Recall Reason" value={recall.recall_reason} />
+            <Row label="Laboratory Findings" value={recall.laboratory_findings} />
           </CardContent>
         </Card>
         <Card>
           <CardHeader><CardTitle>Batch & Manufacturer</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            <Row label="Batch Number" value={recall.batch?.batch_number ?? '—'} />
-            <Row label="Product" value={recall.batch?.product?.name ?? '—'} />
-            <Row label="Generic Name" value={recall.batch?.product?.generic_name ?? '—'} />
-            <Row label="Strength" value={recall.batch?.product?.strength ?? '—'} />
-            <Row label="Manufacture Date" value={recall.batch?.manufacture_date ?? '—'} />
+            <Row label="Lot Number" value={recall.batch?.lot_number ?? '—'} />
+            <Row label="Product" value={recall.batch?.product?.product_name ?? '—'} />
+            <Row label="INN Name" value={recall.batch?.product?.inn_name ?? '—'} />
+            <Row label="Potency" value={recall.batch?.product?.potency ?? '—'} />
+            <Row label="Production Date" value={recall.batch?.production_date ?? '—'} />
             <Row label="Expiry Date" value={recall.batch?.expiry_date ?? '—'} />
-            <Row label="Manufacturer" value={recall.manufacturer?.name ?? '—'} />
-            <Row label="Country" value={recall.manufacturer?.country ?? '—'} />
+            <Row label="Manufacturer" value={recall.manufacturer?.company_name ?? '—'} />
+            <Row label="Country" value={recall.manufacturer?.origin_country ?? '—'} />
           </CardContent>
         </Card>
       </div>

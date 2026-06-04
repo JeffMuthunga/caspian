@@ -19,10 +19,10 @@ export default async function BatchesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Batch No.</TableHead>
+              <TableHead>Lot No.</TableHead>
               <TableHead>Product</TableHead>
               <TableHead>Manufacturer</TableHead>
-              <TableHead>Manufacture Date</TableHead>
+              <TableHead>Production Date</TableHead>
               <TableHead>Expiry Date</TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -37,10 +37,10 @@ export default async function BatchesPage() {
             ) : (
               batches.map((batch) => (
                 <TableRow key={batch.id}>
-                  <TableCell className="font-mono text-sm">{batch.batch_number}</TableCell>
-                  <TableCell>{batch.product?.name ?? '—'}</TableCell>
-                  <TableCell>{batch.manufacturer?.name ?? '—'}</TableCell>
-                  <TableCell>{batch.manufacture_date}</TableCell>
+                  <TableCell className="font-mono text-sm">{batch.lot_number}</TableCell>
+                  <TableCell>{batch.product?.product_name ?? '—'}</TableCell>
+                  <TableCell>{batch.manufacturer?.company_name ?? '—'}</TableCell>
+                  <TableCell>{batch.production_date}</TableCell>
                   <TableCell>{batch.expiry_date}</TableCell>
                   <TableCell>
                     <Link

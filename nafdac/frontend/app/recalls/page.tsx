@@ -32,12 +32,12 @@ export default async function RecallsPage({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Recall No.</TableHead>
+              <TableHead>Alert Reference</TableHead>
               <TableHead>Product</TableHead>
-              <TableHead>Batch</TableHead>
-              <TableHead>Classification</TableHead>
+              <TableHead>Lot No.</TableHead>
+              <TableHead>Severity Grade</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Date Issued</TableHead>
+              <TableHead>Issue Date</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -51,12 +51,12 @@ export default async function RecallsPage({
             ) : (
               recalls.map((recall) => (
                 <TableRow key={recall.id}>
-                  <TableCell className="font-mono text-sm">{recall.recall_number}</TableCell>
-                  <TableCell>{recall.batch?.product?.name ?? '—'}</TableCell>
-                  <TableCell className="font-mono text-sm">{recall.batch?.batch_number ?? '—'}</TableCell>
-                  <TableCell>{recall.classification}</TableCell>
-                  <TableCell><StatusBadge status={recall.status} /></TableCell>
-                  <TableCell>{recall.date_issued}</TableCell>
+                  <TableCell className="font-mono text-sm">{recall.alert_reference}</TableCell>
+                  <TableCell>{recall.batch?.product?.product_name ?? '—'}</TableCell>
+                  <TableCell className="font-mono text-sm">{recall.batch?.lot_number ?? '—'}</TableCell>
+                  <TableCell>{recall.severity_grade}</TableCell>
+                  <TableCell><StatusBadge status={recall.recall_status} /></TableCell>
+                  <TableCell>{recall.issue_date}</TableCell>
                   <TableCell>
                     <Link
                       href={`/recalls/${recall.id}`}

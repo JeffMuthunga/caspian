@@ -30,14 +30,14 @@ export default async function BatchDetailPage({ params }: { params: Promise<{ id
   }
 
   const allRecalls = await api.recalls.list()
-  const linkedRecalls = allRecalls.filter((r) => r.batch_id === batch.id)
+  const linkedRecalls = allRecalls.filter((r) => r.lot_id === batch.id)
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{batch.batch_number}</h1>
-          <p className="text-sm text-gray-500 mt-1">{batch.product?.name ?? '—'}</p>
+          <h1 className="text-2xl font-semibold text-gray-900">{batch.lot_number}</h1>
+          <p className="text-sm text-gray-500 mt-1">{batch.product?.product_name ?? '—'}</p>
         </div>
         <Link href="/batches" className={buttonVariants({ variant: 'outline' })}>
           ← Back to Batches
@@ -48,12 +48,12 @@ export default async function BatchDetailPage({ params }: { params: Promise<{ id
         <Card>
           <CardHeader><CardTitle>Batch Information</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            <Row label="Batch Number" value={batch.batch_number} />
-            <Row label="Product" value={batch.product?.name ?? '—'} />
-            <Row label="Generic Name" value={batch.product?.generic_name ?? '—'} />
-            <Row label="Strength" value={batch.product?.strength ?? '—'} />
-            <Row label="Manufacturer" value={batch.manufacturer?.name ?? '—'} />
-            <Row label="Manufacture Date" value={batch.manufacture_date} />
+            <Row label="Lot Number" value={batch.lot_number} />
+            <Row label="Product" value={batch.product?.product_name ?? '—'} />
+            <Row label="INN Name" value={batch.product?.inn_name ?? '—'} />
+            <Row label="Potency" value={batch.product?.potency ?? '—'} />
+            <Row label="Manufacturer" value={batch.manufacturer?.company_name ?? '—'} />
+            <Row label="Production Date" value={batch.production_date} />
             <Row label="Expiry Date" value={batch.expiry_date} />
           </CardContent>
         </Card>
@@ -67,10 +67,10 @@ export default async function BatchDetailPage({ params }: { params: Promise<{ id
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Recall No.</TableHead>
-                <TableHead>Classification</TableHead>
+                <TableHead>Alert Reference</TableHead>
+                <TableHead>Severity Grade</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Date Issued</TableHead>
+                <TableHead>Issue Date</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -84,10 +84,10 @@ export default async function BatchDetailPage({ params }: { params: Promise<{ id
               ) : (
                 linkedRecalls.map((recall) => (
                   <TableRow key={recall.id}>
-                    <TableCell className="font-mono text-sm">{recall.recall_number}</TableCell>
-                    <TableCell>{recall.classification}</TableCell>
-                    <TableCell><StatusBadge status={recall.status} /></TableCell>
-                    <TableCell>{recall.date_issued}</TableCell>
+                    <TableCell className="font-mono text-sm">{recall.alert_reference}</TableCell>
+                    <TableCell>{recall.severity_grade}</TableCell>
+                    <TableCell><StatusBadge status={recall.recall_status} /></TableCell>
+                    <TableCell>{recall.issue_date}</TableCell>
                     <TableCell>
                       <Link
                         href={`/recalls/${recall.id}`}
