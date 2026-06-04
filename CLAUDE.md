@@ -162,7 +162,7 @@ GET   /health                 Service health check
 - [ ] **Phase 2 — AI Service**: FastAPI skeleton · embed function · pgvector store · ingest script
 - [x] **Phase 3 — Rwanda FDA Backend**: Laravel manufacturers + products + batches + product_recalls · OntologyPublisher wired · all tests passing (Laravel 13 / PHP 8.4)
 - [ ] **Phase 4 — Rwanda FDA Frontend**: Next.js recall list · batch view · AI chat interface · citations
-- [~] **Phase 5 — NAFDAC Backend**: Scaffold complete · domain models in progress (different column names: company_name, lot_number, severity_grade, etc.)
+- [x] **Phase 5 — NAFDAC Backend**: Full backend complete · manufacturers (company_name/reg_no), products (supplier_id/inn_name/formulation/potency/market_auth_number), batches (lot_number/production_date/supplier_id), product_recalls (lot_id/alert_reference/severity_grade/laboratory_findings) · OntologyPublisher maps all NAFDAC columns → canonical ontology field names
 
 ### Test commands
 - Rwanda FDA: `cd rwanda-fda/backend && /opt/homebrew/opt/php/bin/php vendor/bin/phpunit --no-coverage`
