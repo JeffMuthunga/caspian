@@ -58,10 +58,10 @@ class ObjectMarking(Base):
 class Embedding(Base):
     __tablename__ = "embeddings"
 
-    id:         Mapped[str]   = mapped_column(String(36), primary_key=True, default=new_uuid)
-    object_id:  Mapped[str]   = mapped_column(ForeignKey("published_objects.id"))
-    chunk_text: Mapped[str]   = mapped_column(Text)
-    embedding:  Mapped[list]  = mapped_column(Vector(768), nullable=True)
-    metadata:   Mapped[dict]  = mapped_column(JSONB, default=dict)
+    id:            Mapped[str]   = mapped_column(String(36), primary_key=True, default=new_uuid)
+    object_id:     Mapped[str]   = mapped_column(ForeignKey("published_objects.id"))
+    chunk_text:    Mapped[str]   = mapped_column(Text)
+    embedding:     Mapped[list]  = mapped_column(Vector(768), nullable=True)
+    extra_metadata: Mapped[dict] = mapped_column("metadata", JSONB, default=dict)
 
     object: Mapped["PublishedObject"] = relationship(back_populates="embeddings")
