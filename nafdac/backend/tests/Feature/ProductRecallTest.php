@@ -75,4 +75,51 @@ class ProductRecallTest extends TestCase
         $this->getJson('/api/product-recalls?status=active')->assertStatus(200)->assertJsonCount(1);
         $this->getJson('/api/product-recalls?status=completed')->assertStatus(200)->assertJsonCount(0);
     }
+
+    public function test_recall_index_includes_batch_and_manufacturer_relations(): void
+    {
+        Http::fake([
+            '*/ontology/publish' => Http::response(['id' => 'uuid-1', 'object_type' => 'Manufacturer'], 200),
+            '*/ontology/link'    => Http::response(['id' => 'link-uuid'], 200),
+            '*/ai/ingest'        => Http::response(['status' => 'ok'], 200),
+        ]);
+
+        ['mfg' => $mfg, 'batch' => $batch] = $this->seedBatchAndManufacturer();
+
+        $this->postJson('/api/product-recalls', [
+            'lot_id' => $batch->id, 'supplier_id' => $mfg->id,
+            'alert_reference' => 'ALERT-REL-001', 'recall_reason' => 'Substandard',
+            'severity_grade' => 'Grade II', 'laboratory_findings' => 'API at 72%',
+            'recall_status' => 'active', 'issue_date' => '2026-01-15',
+        ]);
+
+        $this->getJson('/api/product-recalls')
+             ->assertStatus(200)
+             ->assertJsonPath('0.batch.lot_number', 'LOT-4421')
+             ->assertJsonPath('0.manufacturer.company_name', 'PharmaCo Ltd');
+    }
+
+    public function test_recall_show_includes_batch_and_manufacturer_relations(): void
+    {
+        Http::fake([
+            '*/ontology/publish' => Http::response(['id' => 'uuid-1', 'object_type' => 'Manufacturer'], 200),
+            '*/ontology/link'    => Http::response(['id' => 'link-uuid'], 200),
+            '*/ai/ingest'        => Http::response(['status' => 'ok'], 200),
+        ]);
+
+        ['mfg' => $mfg, 'batch' => $batch] = $this->seedBatchAndManufacturer();
+
+        $recall = $this->postJson('/api/product-recalls', [
+            'lot_id' => $batch->id, 'supplier_id' => $mfg->id,
+            'alert_reference' => 'ALERT-SHOW-001', 'recall_reason' => 'Substandard',
+            'severity_grade' => 'Grade II', 'laboratory_findings' => 'API at 72%',
+            'recall_status' => 'active', 'issue_date' => '2026-01-15',
+        ])->json();
+
+        $this->getJson("/api/product-recalls/{$recall['id']}")
+             ->assertStatus(200)
+             ->assertJsonPath('batch.id', $batch->id)
+             ->assertJsonPath('manufacturer.id', $mfg->id)
+             ->assertJsonPath('batch.lot_number', 'LOT-4421');
+    }
 }

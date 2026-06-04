@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 
 class BatchController extends Controller
 {
-    public function index(): JsonResponse { return response()->json(Batch::all()); }
+    public function index(): JsonResponse
+    {
+        return response()->json(Batch::with(['product', 'manufacturer'])->get());
+    }
 
     public function store(Request $request): JsonResponse
     {
@@ -23,5 +26,9 @@ class BatchController extends Controller
         return response()->json(Batch::create($data), 201);
     }
 
-    public function show(Batch $batch): JsonResponse { return response()->json($batch); }
+    public function show(Batch $batch): JsonResponse
+    {
+        $batch->load(['product', 'manufacturer']);
+        return response()->json($batch);
+    }
 }

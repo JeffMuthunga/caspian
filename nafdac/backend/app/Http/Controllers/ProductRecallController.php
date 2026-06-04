@@ -9,7 +9,7 @@ class ProductRecallController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = ProductRecall::query();
+        $query = ProductRecall::with(['batch.product', 'manufacturer']);
         if ($request->has('status')) {
             $query->where('recall_status', $request->input('status'));
         }
@@ -40,6 +40,7 @@ class ProductRecallController extends Controller
 
     public function show(ProductRecall $productRecall): JsonResponse
     {
+        $productRecall->load(['batch.product', 'manufacturer']);
         return response()->json($productRecall);
     }
 }
