@@ -159,7 +159,7 @@ GET   /health                 Service health check
 ## Build Order
 
 - [x] **Phase 1 — Foundation**: GitHub monorepo · docker-compose · 3 DB schemas · Ollama running
-- [ ] **Phase 2 — AI Service**: FastAPI skeleton · embed function · pgvector store · ingest script
+- [x] **Phase 2 — AI Service**: FastAPI skeleton · /ontology/publish (upsert + access control) · /ontology/link · /ai/ingest (Ollama nomic-embed-text → pgvector) · /ai/query (RAG: semantic search + llama3.1:8b streaming, citations required) · 7 tests passing
 - [x] **Phase 3 — Rwanda FDA Backend**: Laravel manufacturers + products + batches + product_recalls · OntologyPublisher wired · all tests passing (Laravel 13 / PHP 8.4)
 - [ ] **Phase 4 — Rwanda FDA Frontend**: Next.js recall list · batch view · AI chat interface · citations
 - [x] **Phase 5 — NAFDAC Backend**: Full backend complete · manufacturers (company_name/reg_no), products (supplier_id/inn_name/formulation/potency/market_auth_number), batches (lot_number/production_date/supplier_id), product_recalls (lot_id/alert_reference/severity_grade/laboratory_findings) · OntologyPublisher maps all NAFDAC columns → canonical ontology field names
