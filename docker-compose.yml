@@ -52,7 +52,7 @@ services:
     ports:
       - "8001:8000"
     environment:
-      APP_KEY: base64:PLACEHOLDER
+      APP_KEY: base64:sfNgBw7yiV4pD0CtLAwBS3jS8G7yxxfeuPEuhrox85Q=
       DB_CONNECTION: pgsql
       DB_HOST: rwanda-fda-db
       DB_PORT: 5432
@@ -70,7 +70,7 @@ services:
     ports:
       - "8002:8000"
     environment:
-      APP_KEY: base64:PLACEHOLDER
+      APP_KEY: base64:J8T1XkX1Ze2wtmPuc7XkULjWYzHm74+NmB/Wi8YQMqk=
       DB_CONNECTION: pgsql
       DB_HOST: nafdac-db
       DB_PORT: 5432

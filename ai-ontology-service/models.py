@@ -14,7 +14,7 @@ def new_uuid() -> str:
 class PublishedObject(Base):
     __tablename__ = "published_objects"
 
-    id:          Mapped[str]      = mapped_column(String(36), primary_key=True, default=new_uuid)
+    id:          Mapped[str]      = mapped_column(UUID(as_uuid=False), primary_key=True, default=new_uuid)
     source_nmra: Mapped[str]      = mapped_column(String(50))
     object_type: Mapped[str]      = mapped_column(String(100))
     source_id:   Mapped[str]      = mapped_column(String(255))
@@ -31,9 +31,9 @@ class PublishedObject(Base):
 class ObjectLink(Base):
     __tablename__ = "object_links"
 
-    id:              Mapped[str]      = mapped_column(String(36), primary_key=True, default=new_uuid)
-    from_object_id:  Mapped[str]      = mapped_column(ForeignKey("published_objects.id"))
-    to_object_id:    Mapped[str]      = mapped_column(ForeignKey("published_objects.id"))
+    id:              Mapped[str]      = mapped_column(UUID(as_uuid=False), primary_key=True, default=new_uuid)
+    from_object_id:  Mapped[str]      = mapped_column(UUID(as_uuid=False), ForeignKey("published_objects.id"))
+    to_object_id:    Mapped[str]      = mapped_column(UUID(as_uuid=False), ForeignKey("published_objects.id"))
     link_type:       Mapped[str]      = mapped_column(String(100))
     created_by_nmra: Mapped[str]      = mapped_column(String(50))
     created_at:      Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
@@ -45,8 +45,8 @@ class ObjectLink(Base):
 class ObjectMarking(Base):
     __tablename__ = "object_markings"
 
-    id:                  Mapped[str]  = mapped_column(String(36), primary_key=True, default=new_uuid)
-    object_id:           Mapped[str]  = mapped_column(ForeignKey("published_objects.id"))
+    id:                  Mapped[str]  = mapped_column(UUID(as_uuid=False), primary_key=True, default=new_uuid)
+    object_id:           Mapped[str]  = mapped_column(UUID(as_uuid=False), ForeignKey("published_objects.id"))
     nmra_id:             Mapped[str]  = mapped_column(String(50))
     can_read:            Mapped[bool] = mapped_column(Boolean, default=True)
     can_write:           Mapped[bool] = mapped_column(Boolean, default=False)
@@ -58,8 +58,8 @@ class ObjectMarking(Base):
 class Embedding(Base):
     __tablename__ = "embeddings"
 
-    id:            Mapped[str]   = mapped_column(String(36), primary_key=True, default=new_uuid)
-    object_id:     Mapped[str]   = mapped_column(ForeignKey("published_objects.id"))
+    id:            Mapped[str]   = mapped_column(UUID(as_uuid=False), primary_key=True, default=new_uuid)
+    object_id:     Mapped[str]   = mapped_column(UUID(as_uuid=False), ForeignKey("published_objects.id"))
     chunk_text:    Mapped[str]   = mapped_column(Text)
     embedding:     Mapped[list]  = mapped_column(Vector(768), nullable=True)
     extra_metadata: Mapped[dict] = mapped_column("metadata", JSONB, default=dict)
