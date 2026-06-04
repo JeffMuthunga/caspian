@@ -10,7 +10,7 @@ class BatchController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(Batch::all());
+        return response()->json(Batch::with(['product', 'manufacturer'])->get());
     }
 
     public function store(Request $request): JsonResponse
@@ -30,6 +30,7 @@ class BatchController extends Controller
 
     public function show(Batch $batch): JsonResponse
     {
+        $batch->load(['product', 'manufacturer']);
         return response()->json($batch);
     }
 }

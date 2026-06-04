@@ -86,4 +86,51 @@ class ProductRecallTest extends TestCase
              ->assertStatus(200)
              ->assertJsonCount(0);
     }
+
+    public function test_recall_index_includes_batch_and_manufacturer_relations(): void
+    {
+        Http::fake([
+            '*/ontology/publish' => Http::response(['id' => 'some-uuid', 'object_type' => 'Manufacturer'], 200),
+            '*/ontology/link'    => Http::response(['id' => 'link-uuid'], 200),
+            '*/ai/ingest'        => Http::response(['status' => 'ok'], 200),
+        ]);
+
+        ['mfg' => $mfg, 'batch' => $batch] = $this->seedBatchAndManufacturer();
+
+        $this->postJson('/api/product-recalls', [
+            'batch_id' => $batch->id, 'manufacturer_id' => $mfg->id,
+            'recall_number' => 'RCL-REL-001', 'reason' => 'Substandard API content',
+            'classification' => 'Class II', 'qc_summary' => 'API at 72%',
+            'status' => 'active', 'date_issued' => '2026-01-15',
+        ]);
+
+        $this->getJson('/api/product-recalls')
+             ->assertStatus(200)
+             ->assertJsonPath('0.batch.batch_number', 'LOT-4421')
+             ->assertJsonPath('0.manufacturer.name', 'PharmaCo Ltd');
+    }
+
+    public function test_recall_show_includes_batch_and_manufacturer_relations(): void
+    {
+        Http::fake([
+            '*/ontology/publish' => Http::response(['id' => 'some-uuid', 'object_type' => 'Manufacturer'], 200),
+            '*/ontology/link'    => Http::response(['id' => 'link-uuid'], 200),
+            '*/ai/ingest'        => Http::response(['status' => 'ok'], 200),
+        ]);
+
+        ['mfg' => $mfg, 'batch' => $batch] = $this->seedBatchAndManufacturer();
+
+        $recall = $this->postJson('/api/product-recalls', [
+            'batch_id' => $batch->id, 'manufacturer_id' => $mfg->id,
+            'recall_number' => 'RCL-SHOW-001', 'reason' => 'Substandard API content',
+            'classification' => 'Class II', 'qc_summary' => 'API at 72%',
+            'status' => 'active', 'date_issued' => '2026-01-15',
+        ])->json();
+
+        $this->getJson("/api/product-recalls/{$recall['id']}")
+             ->assertStatus(200)
+             ->assertJsonPath('batch.id', $batch->id)
+             ->assertJsonPath('batch.product.registration_number', 'PRD-112')
+             ->assertJsonPath('manufacturer.id', $mfg->id);
+    }
 }

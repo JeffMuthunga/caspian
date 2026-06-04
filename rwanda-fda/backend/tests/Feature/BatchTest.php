@@ -54,4 +54,36 @@ class BatchTest extends TestCase
 
         $this->getJson('/api/batches')->assertStatus(200)->assertJsonCount(1);
     }
+
+    public function test_batch_index_includes_product_and_manufacturer_relations(): void
+    {
+        ['manufacturer' => $mfg, 'product' => $product] = $this->product();
+
+        $this->postJson('/api/batches', [
+            'product_id' => $product->id, 'manufacturer_id' => $mfg->id,
+            'batch_number' => 'LOT-IDX-001', 'manufacture_date' => '2025-01-01',
+            'expiry_date' => '2027-01-01',
+        ]);
+
+        $this->getJson('/api/batches')
+             ->assertStatus(200)
+             ->assertJsonPath('0.product.name', 'Amoxicillin 500mg')
+             ->assertJsonPath('0.manufacturer.name', 'PharmaCo Ltd');
+    }
+
+    public function test_batch_show_includes_product_and_manufacturer_relations(): void
+    {
+        ['manufacturer' => $mfg, 'product' => $product] = $this->product();
+
+        $batch = $this->postJson('/api/batches', [
+            'product_id' => $product->id, 'manufacturer_id' => $mfg->id,
+            'batch_number' => 'LOT-SHOW-001', 'manufacture_date' => '2025-01-01',
+            'expiry_date' => '2027-01-01',
+        ])->json();
+
+        $this->getJson("/api/batches/{$batch['id']}")
+             ->assertStatus(200)
+             ->assertJsonPath('product.id', $product->id)
+             ->assertJsonPath('manufacturer.id', $mfg->id);
+    }
 }
