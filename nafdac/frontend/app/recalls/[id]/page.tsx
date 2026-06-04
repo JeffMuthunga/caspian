@@ -41,6 +41,7 @@ export default async function RecallDetailPage({ params }: { params: Promise<{ i
           <CardContent className="space-y-4">
             <Row label="Alert Reference" value={recall.alert_reference} />
             <Row label="Severity Grade" value={recall.severity_grade} />
+            <Row label="Status" value={recall.recall_status} />
             <Row label="Issue Date" value={recall.issue_date} />
             <Row label="Affected Regions" value={recall.affected_regions ?? '—'} />
             <Row label="Recall Reason" value={recall.recall_reason} />

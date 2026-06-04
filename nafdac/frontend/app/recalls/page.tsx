@@ -32,7 +32,7 @@ export default async function RecallsPage({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Alert Reference</TableHead>
+              <TableHead>Alert Ref.</TableHead>
               <TableHead>Product</TableHead>
               <TableHead>Lot No.</TableHead>
               <TableHead>Severity Grade</TableHead>
