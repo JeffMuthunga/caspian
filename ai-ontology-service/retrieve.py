@@ -66,15 +66,15 @@ async def semantic_search(query: str, nmra_id: str, top_k: int = 10) -> list[dic
     vector_str = "[" + ",".join(str(v) for v in vector) + "]"
 
     async with SessionLocal() as session:
-        rows = (await session.execute(text("""
+        rows = (await session.execute(text(f"""
             SELECT e.chunk_text, e.object_id, e.metadata,
-                   1 - (e.embedding <=> :vec::vector) AS score
+                   1 - (e.embedding <=> '{vector_str}'::vector) AS score
             FROM embeddings e
             JOIN object_markings m ON m.object_id = e.object_id
             WHERE m.nmra_id = :nmra AND m.can_read = true
-            ORDER BY e.embedding <=> :vec::vector
+            ORDER BY e.embedding <=> '{vector_str}'::vector
             LIMIT :top_k
-        """), {"vec": vector_str, "nmra": nmra_id, "top_k": top_k})).fetchall()
+        """), {"nmra": nmra_id, "top_k": top_k})).fetchall()
 
         return [
             {

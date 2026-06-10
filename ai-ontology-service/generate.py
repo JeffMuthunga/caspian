@@ -9,7 +9,7 @@ from retrieve import semantic_search
 router = APIRouter()
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-LLM_MODEL   = "llama3.1:8b"
+LLM_MODEL   = "gemma3:4b"
 
 SYSTEM_PROMPT = """You are a regulatory intelligence assistant for National Medicines Regulatory Authorities.
 You answer questions using ONLY the context provided. Every factual claim MUST include a citation in

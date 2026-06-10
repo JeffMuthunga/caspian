@@ -84,7 +84,10 @@ services:
         condition: service_healthy
 
   rwanda-fda-frontend:
-    build: ./rwanda-fda/frontend
+    build:
+      context: ./rwanda-fda/frontend
+      args:
+        BACKEND_URL: http://rwanda-fda-backend:8000
     ports:
       - "3000:3000"
     environment:
@@ -93,7 +96,10 @@ services:
       - rwanda-fda-backend
 
   nafdac-frontend:
-    build: ./nafdac/frontend
+    build:
+      context: ./nafdac/frontend
+      args:
+        BACKEND_URL: http://nafdac-backend:8000
     ports:
       - "3001:3000"
     environment:
@@ -105,6 +111,8 @@ services:
     build: ./ai-ontology-service
     ports:
       - "8000:8000"
+    volumes:
+      - ./ai-ontology-service:/app
     environment:
       DATABASE_URL: postgresql+asyncpg://postgres:secret@ontology-db:5432/ontology
       OLLAMA_HOST: http://host.docker.internal:11434
